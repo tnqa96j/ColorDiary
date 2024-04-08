@@ -7,6 +7,7 @@ import DiaryScreen from "../Screen/DiaryScreen";
 import ColorAlbumScreen from "../Screen/ColorAlbumScreen";
 import SettingScreen from "../Screen/SettingScreen";
 import PickColorScreen from "../Screen/PickColorScreen";
+import StartScreen from "../Screen/StartScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,15 +23,24 @@ const Tab = createBottomTabNavigator();
 export default function Navigation() {
     const hasPickedColor = useSelector(selectHasPickedColor)
     return (
-        <>
-            {
-                !hasPickedColor ? <PickColorScreen /> : (
-                    <NavigationContainer>
-                        <MyTab />
-                    </NavigationContainer>
-                )
-            }
-        </>
+
+        <NavigationContainer>
+            {!hasPickedColor ?<NyStack />:<MyTab />}
+        </NavigationContainer>
+
+    );
+}
+
+const NyStack = () => {
+    return (
+        <Stack.Navigator
+            initialRouteName="HomeStack"
+            screenOptions={{
+                headerShown: false,
+            }}>
+            <Stack.Screen name="start" component={StartScreen} />
+            <Stack.Screen name="pickColor" component={PickColorScreen} />
+        </Stack.Navigator>
     );
 }
 
