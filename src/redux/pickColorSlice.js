@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     colors:{
-        color1:"#000000",
-        color2:"#fed9a8",
-        color3:"#000000",
-        color4:"#000000",
-        color5:"#000000",
+        color1:"#DCE2E3",
+        color2:"#DCE2E3",
+        color3:"#DCE2E3",
+        color4:"#DCE2E3",
+        color5:"#DCE2E3",
     },
     hasPickedColor : false,
 };

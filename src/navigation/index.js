@@ -37,6 +37,7 @@ const NyStack = () => {
             initialRouteName="HomeStack"
             screenOptions={{
                 headerShown: false,
+                animationTypeForReplaceL:'push'
             }}>
             <Stack.Screen name="start" component={StartScreen} />
             <Stack.Screen name="pickColor" component={PickColorScreen} />
