@@ -11,6 +11,12 @@ import ColorPicker, { LuminanceCircular, Panel3, PreviewText, Swatches, colorKit
 import { debounce } from 'lodash';
 import Color from 'color';
 
+import { useFonts } from "expo-font";
+import * as SplashScreen from 'expo-splash-screen';
+import { useCallback } from 'react';
+
+SplashScreen.preventAutoHideAsync();
+
 export default function PickColorScreen() {
 
     const colors = useSelector(selectPickedColors);
@@ -86,10 +92,24 @@ export default function PickColorScreen() {
         return darkerColor.hex();
     }
 
+    const [fontsLoaded, fontError] = useFonts({
+        'KoHo-Light' : require('../../assets/font/KoHo-Light.ttf'),
+      });
+    
+      const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded || fontError) {
+          await SplashScreen.hideAsync();
+        }
+      }, [fontsLoaded, fontError]);
+    
+      if (!fontsLoaded && !fontError) {
+        return null;
+      }
+
 
     return (
 
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
             <LinearGradient
                 colors={['#faf6ec', '#d7e5e1']}
                 style={styles.lineargradient}
@@ -235,6 +255,7 @@ const styles = StyleSheet.create({
         transform:[{translateX:100},{translateY:15}],
         transform:[{ rotate:'-90deg' }],
         bottom:0,
+        fontFamily:'KoHo-Light'
     },
     colorPicker: {
         width: '90%',

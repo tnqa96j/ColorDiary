@@ -3,6 +3,12 @@ import { useDispatch } from "react-redux";
 import { setPickedColor1, setPickedColor2, setPickedColor3, setPickedColor4, setPickedColor5, setHasPickedColor } from '../redux/pickColorSlice';
 import { LinearGradient } from "expo-linear-gradient";
 
+import { useFonts } from "expo-font";
+import * as SplashScreen from 'expo-splash-screen';
+import { useCallback } from 'react';
+
+SplashScreen.preventAutoHideAsync();
+
 export default function StartScreen({ navigation }) {
 
     const dispatch = useDispatch();
@@ -37,9 +43,23 @@ export default function StartScreen({ navigation }) {
         dispatch(setHasPickedColor());
     }
 
+    const [fontsLoaded, fontError] = useFonts({
+        'KoHo-Light' : require('../../assets/font/KoHo-Light.ttf'),
+      });
+    
+      const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded || fontError) {
+          await SplashScreen.hideAsync();
+        }
+      }, [fontsLoaded, fontError]);
+    
+      if (!fontsLoaded && !fontError) {
+        return null;
+      }
+
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
             <StatusBar />
             <LinearGradient
                 colors={['#faf6ec', '#d7e5e1']}
@@ -99,6 +119,7 @@ const styles = StyleSheet.create({
         textShadowOffset:{ width: 0, height: 2 },
         textShadowRadius:10,
         elevation:10,
+        fontFamily:'KoHo-Light'
     },
     image: {
         alignSelf:'center',

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import 'react-native-gesture-handler'
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -37,7 +37,7 @@ const NyStack = () => {
             initialRouteName="HomeStack"
             screenOptions={{
                 headerShown: false,
-                animationTypeForReplaceL:'push'
+                
             }}>
             <Stack.Screen name="start" component={StartScreen} />
             <Stack.Screen name="pickColor" component={PickColorScreen} />
@@ -56,42 +56,75 @@ const MyTab = () => {
                 tabBarStyle: {
                     paddingBottom: Platform.OS === 'ios' ? inset.bottom : 5,
                     paddingTop: Platform.OS === 'ios' ? inset.top : 5,
+                    position:'absolute',
+                    bottom:25,
+                    left:20,
+                    right:20,
+                    elevation:0,
+                    borderRadius:100,
+                    backgroundColor:'#F5F4EB',
+                    height:60,
+                    shadowColor:'#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.2,
+                    shadowRadius: 4,
+                    elevation: 4, // for Android
+                    borderWidth:0.5,
+                    borderColor:'#CCD9D6',
+                },
+                tabBarShowLabel:false,
+                headerStyle:{
+                    backgroundColor:'#FAF6EC',
+                },
+                headerTitleStyle:{
+                    color:'#3A6655'
+                },
+                headerTitleAlign:'center',
+                tabBarActiveBackgroundColor:'#4A5759',
+                tabBarItemStyle:{
+                    marginHorizontal:10,
+                    borderRadius:20,
                 },
             }}
+            
         >
             <Tab.Screen
                 name="Home"
                 component={HomeScreen}
                 options={{
-                    tabBarIcon: ({ color }) => (
-                        <Ionicons name="home" color={color} size={26} />
+                    tabBarIcon: ({focused }) => (
+                        <Ionicons name="home" color={ focused?'#F5F4EB':'#4A5759'} size={28} />
                     ),
+                    headerTitle:'首頁',
                 }} />
             <Tab.Screen
                 name="Diary"
                 component={DiaryScreen}
                 options={{
-                    tabBarIcon: ({ color }) => (
-                        <Ionicons name="book" color={color} size={26} />
+                    tabBarIcon: ({ focused }) => (
+                        <Ionicons name="book" color={ focused?'#F5F4EB':'#4A5759'} size={28} />
                     ),
+                    headerTitle:'日記',
                 }}
             />
             <Tab.Screen
                 name="ColorAlbum"
                 component={ColorAlbumScreen}
                 options={{
-                    tabBarIcon: ({ color }) => (
-                        <Ionicons name="albums" color={color} size={26} />
+                    tabBarIcon: ({ focused }) => (
+                        <Ionicons name="albums" color={ focused?'#F5F4EB':'#4A5759'} size={28} />
                     ),
+                    headerTitle:'圖鑑',
                 }}
             />
             <Tab.Screen
                 name="Setting"
                 component={SettingScreen}
                 options={{
-                    tabBarIcon: ({ color }) => (
-                        <Ionicons name="settings" color={color} size={26} />
+                    tabBarIcon: ({ focused }) => (
+                        <Ionicons name="settings" color={ focused?'#F5F4EB':'#4A5759'} size={28} />
                     ),
+                    headerTitle:'設定',
                 }}
             />
         </Tab.Navigator>
