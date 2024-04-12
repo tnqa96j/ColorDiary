@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         marginHorizontal: 10,
         marginLeft: 20,
-        fontSize: 12,
+        fontSize: 14,
         color: '#F7F5EC',
     },
     filter: {

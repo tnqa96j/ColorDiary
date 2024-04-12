@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#f7f6f0",
         borderRadius: 12,
         alignItems: 'center',
+        justifyContent:'center',
         height: 80,
         width: 70,
         marginHorizontal: 5,
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
         display: 'none'
     },
     dateText: {
-        fontSize: 20,
+        fontSize: 22,
         textAlign: 'center',
         fontFamily: 'KoHo-Light',
         marginTop:'5%',

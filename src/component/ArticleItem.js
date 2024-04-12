@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     image: {
         width: '80%',
         height: '100%',
-        backgroundColor: 'blue',
         borderTopLeftRadius: 20,
         borderBottomLeftRadius: 20,
     },
@@ -81,13 +80,13 @@ const styles = StyleSheet.create({
 
         color: "#456F5F",
         fontSize: 20,
-        marginTop: 5,
+        marginVertical: 5,
         fontWeight: 'bold',
         paddingLeft: 5
     },
     content: {
         color: "#456F5F",
-        fontSize: 14,
+        fontSize: 16,
         paddingLeft: 5
     },
     bottomText: {
