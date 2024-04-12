@@ -1,5 +1,4 @@
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
-import { colorKit } from 'reanimated-color-picker';
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useCallback, useState } from 'react';

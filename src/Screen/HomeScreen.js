@@ -6,6 +6,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import ColorRing from "../component/ColorRing";
+import AddButton from "../component/AddButton";
 
 
 SplashScreen.preventAutoHideAsync();
@@ -67,8 +68,10 @@ export default function HomeScreen() {
                             <Text style={styles.three}>GO</Text>
                         </View>
                     </View>
+                    <View style={{height:80}} />
                 </ScrollView>
             </LinearGradient>
+            <AddButton />
         </View>
 
     );
@@ -142,7 +145,7 @@ const styles = StyleSheet.create({
     taskBlock:{
         width:'50%',
         backgroundColor:'#F4F3EA',
-        height:200,
+        height:180,
         borderRadius:12,
         padding:'5%'
     },

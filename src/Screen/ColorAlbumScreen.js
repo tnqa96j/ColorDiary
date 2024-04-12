@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import ColorPicker, { Swatches, colorKit } from 'reanimated-color-picker';
 import colorsData from '../json/color.json'
 import AlbumItem from "../component/AlbumItem";
+import AddButton from "../component/AddButton";
 
 export default function ColorAlbumScreen({ navigation }) {
 
@@ -50,6 +51,7 @@ export default function ColorAlbumScreen({ navigation }) {
                 </View>
                 <View style={{ height: 75 }} />
             </LinearGradient>
+            <AddButton />
         </View>
     );
 }

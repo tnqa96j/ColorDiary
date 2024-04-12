@@ -8,6 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper } from '@gluestack-ui/themed';
 import articleData from '../json/article.json'
 import ArticleItem from "../component/ArticleItem";
+import AddButton from "../component/AddButton";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -107,6 +108,8 @@ export default function DiaryScreen() {
                 </View>
                 <View style={{height:70}} />
             </LinearGradient>
+
+            <AddButton />
 
             <Actionsheet isOpen={showActionsheet} onClose={handleClose} zIndex={999}>
                 <ActionsheetBackdrop />

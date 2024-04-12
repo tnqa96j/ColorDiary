@@ -1,13 +1,18 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback } from 'react';
+import { useCallback,useState } from 'react';
 import { Divider } from "@gluestack-ui/themed";
-import { bottomLeft, bottomRight } from "@shopify/react-native-skia";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper, ActionsheetItem, ActionsheetItemText } from "@gluestack-ui/themed";
+
 
 SplashScreen.preventAutoHideAsync();
 
 export default function ArticleItem({ data }) {
+
+    const [showActionsheet, setShowActionsheet] = useState(false)
+    const handleClose = () => setShowActionsheet(!showActionsheet)
 
     const [fontsLoaded, fontError] = useFonts({
         'KoHo-Light': require('../../assets/font/KoHo-Light.ttf'),
@@ -36,19 +41,37 @@ export default function ArticleItem({ data }) {
                 </View>
             </View>
 
-            <Text style={styles.title}>{data.title}</Text>
+            <View style={styles.bottomText}>
+                <Text style={styles.title}>{data.title}</Text>
+                <Pressable onPress={handleClose}>
+                    <MaterialCommunityIcons name="dots-horizontal" size={36} color="#456F5F" />
+                </Pressable>
+            </View>
+
             <Text style={styles.content}>{data.content}</Text>
             <View style={styles.bottomText}>
-
                 <Text style={styles.time}>{data.date} {data.time}</Text>
-
-                <View style={styles.bottomRight}>
-                    <Text style={styles.time}>編輯</Text>
-                    <Text style={styles.time}>刪除</Text>
-                </View>
             </View>
             <Divider />
-            <View style={{height:20}}></View>
+            <View style={{ height: 40 }}></View>
+
+            <Actionsheet isOpen={showActionsheet} onClose={handleClose} zIndex={999}>
+                <ActionsheetBackdrop />
+
+                <ActionsheetContent h="$72" zIndex={999}>
+
+                    <ActionsheetDragIndicatorWrapper>
+                        <ActionsheetDragIndicator />
+                    </ActionsheetDragIndicatorWrapper>
+
+                    <ActionsheetItem onPress={handleClose}>
+                        <ActionsheetItemText>編輯</ActionsheetItemText>
+                    </ActionsheetItem>
+                    <ActionsheetItem onPress={handleClose}>
+                        <ActionsheetItemText>刪除</ActionsheetItemText>
+                    </ActionsheetItem>
+                </ActionsheetContent>
+            </Actionsheet>
         </View>
     );
 }
@@ -77,7 +100,6 @@ const styles = StyleSheet.create({
         height: '20%',
     },
     title: {
-
         color: "#456F5F",
         fontSize: 20,
         marginVertical: 5,
@@ -100,14 +122,15 @@ const styles = StyleSheet.create({
     bottomRight: {
         display: 'flex',
         flexDirection: 'row',
-        gap:20
+        gap: 20
     },
     time: {
         fontFamily: 'KoHo-Light',
         color: "#71AE97",
         fontSize: 12,
         marginVertical: 10,
-        paddingLeft: 5
+        paddingLeft: 5,
+        marginRight: 20
 
     },
 });
