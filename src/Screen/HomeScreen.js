@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
         width:'100%',
         paddingHorizontal:'10%',
         alignItems:'flex-end',
+        marginTop:5,
     },
     date:{
         height:'100%',
@@ -141,13 +142,13 @@ const styles = StyleSheet.create({
     taskBlock:{
         width:'50%',
         backgroundColor:'#F4F3EA',
-        height:150,
+        height:200,
         borderRadius:12,
         padding:'5%'
     },
     one:{
         color:'#3A6655',
-        fontSize:22,
+        fontSize:20,
         lineHeight:35,
         fontWeight:'bold'
 

@@ -89,7 +89,7 @@ export default function PickColorScreen() {
         const originColor = Color(color);
         const darkerColor = originColor.darken(0.3);
         const saturatedColor = darkerColor.saturate(0.3)
-        return darkerColor.hex();
+        return saturatedColor.hex();
     }
 
     const [fontsLoaded, fontError] = useFonts({
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
         justifyContent:'center'
     },
     pressableText:{
-        fontSize:20,
+        fontSize:15,
         width:85,
         transform:[{translateX:100},{translateY:15}],
         transform:[{ rotate:'-90deg' }],
