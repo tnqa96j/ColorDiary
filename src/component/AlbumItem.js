@@ -45,6 +45,8 @@ const styles = StyleSheet.create({
         width: 90,
         height: 90,
         borderRadius: 12,
+        borderColor:'#9AA0A1',
+        borderWidth:0.5
     },
     text: {
         fontFamily: 'KoHo-Light',

@@ -55,7 +55,7 @@ export default function Calendar({ onSelectDate, selected }) {
         <View onLayout={onLayoutRootView}>
             <View style={styles.title}>
                 <AntDesign name="left" size={14} color="#3A6655" />
-                <Text style={styles.titleText}>{currentMonth}  2024</Text>
+                <Text style={styles.titleText}>{currentMonth}  {moment().year()}</Text>
                 <AntDesign name="right" size={14} color="#3A6655" />
             </View>
 

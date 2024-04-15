@@ -45,6 +45,7 @@ export default function StartScreen({ navigation }) {
 
     const [fontsLoaded, fontError] = useFonts({
         'KoHo-Light' : require('../../assets/font/KoHo-Light.ttf'),
+        'Caveat-Medium': require('../../assets/font/Caveat-Medium.ttf')
       });
     
       const onLayoutRootView = useCallback(async () => {
@@ -66,7 +67,7 @@ export default function StartScreen({ navigation }) {
                 style={styles.lineargradient}>
 
                 <View style={styles.logo}>
-                    <Text style={styles.logoText}>COLORDIARY</Text>
+                    <Text style={styles.logoText}>COLORFUL DIARY</Text>
                 </View>
 
                 <View >
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
         textShadowOffset:{ width: 0, height: 2 },
         textShadowRadius:10,
         elevation:10,
-        fontFamily:'KoHo-Light'
+        fontFamily:'Caveat-Medium',
     },
     image: {
         alignSelf:'center',

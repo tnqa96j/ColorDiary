@@ -64,7 +64,7 @@ export default function HomeScreen() {
                         </View>
                         <View style={styles.taskBlock}>
                             <Text style={styles.one}>今日代表色</Text>
-                            <Text style={styles.two}>抽籤</Text>
+                            <Text style={styles.two}>今日運勢</Text>
                             <Text style={styles.three}>GO</Text>
                         </View>
                     </View>

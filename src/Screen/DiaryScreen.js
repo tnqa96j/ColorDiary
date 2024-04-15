@@ -49,12 +49,10 @@ export default function DiaryScreen() {
         }
     }
 
-    return (
-        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-            <LinearGradient
-                colors={['#faf6ec', '#d7e5e1']}
-                style={styles.lineargradient}
-            >
+    
+    ListHeaderComponent = () => {
+        return (
+            <>
                 <Calendar
                     onSelectDate={setSelectedDate}
                     selected={selectedDate}
@@ -97,6 +95,17 @@ export default function DiaryScreen() {
                         <AntDesign name="filter" size={24} style={styles.filter} color="#3A6655" />
                     </Pressable>
                 </View>
+            </>
+        );
+
+    }
+
+    return (
+        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+            <LinearGradient
+                colors={['#faf6ec', '#d7e5e1']}
+                style={styles.lineargradient}
+            >
 
                 <View style={styles.articleArea}>
                     <FlatList
@@ -104,9 +113,10 @@ export default function DiaryScreen() {
                         renderItem={({ item }) => <ArticleItem data={item} />}
                         keyExtractor={item => item.id}
                         showsVerticalScrollIndicator={false}
+                        ListHeaderComponent={this.ListHeaderComponent()}
+                        ListFooterComponent={() => <View style={{ height: 100 }} />}
                     />
                 </View>
-                <View style={{height:70}} />
             </LinearGradient>
 
             <AddButton />
@@ -186,8 +196,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         gap: 8,
-        paddingHorizontal: 15,
-        paddingVertical:5,
+
+        paddingVertical: 5,
 
     },
     tagScroll: {
@@ -243,10 +253,10 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         height: 45,
     },
-    articleArea:{
-        paddingHorizontal:'5%',
-        paddingVertical:5,
-        flex:1
+    articleArea: {
+        paddingHorizontal: '5%',
+        paddingVertical: 5,
+        flex: 1
     }
 });
 

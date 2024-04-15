@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
+import { View, Text, StyleSheet, FlatList, ScrollView, SectionList } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import ColorPicker, { Swatches, colorKit } from 'reanimated-color-picker';
 import colorsData from '../json/color.json'
@@ -7,7 +7,7 @@ import AddButton from "../component/AddButton";
 
 export default function ColorAlbumScreen({ navigation }) {
 
-    const customSwatches = ['#FA6969', '#FAC969', '#FAE369', '#BAFA69', '#69C6FA', '#6980FA', '#CC69FA']
+    const customSwatches = ['#FA6969', '#FAC969', '#FAE369', '#BAFA69', '#69C6FA', '#CC69FA']
 
     const onSelectColor = ({ hex }) => {
         console.log(hex);
@@ -20,20 +20,6 @@ export default function ColorAlbumScreen({ navigation }) {
                 style={styles.lineargradient}
             >
 
-                <View style={styles.colorTypeArea}>
-                    <ColorPicker
-                        sliderThickness={24}
-                        thumbSize={24}
-                        onChange={onSelectColor}
-                        adaptSpectrum
-                        boundedThumb>
-                        <Swatches
-                            colors={customSwatches}
-                            swatchStyle={styles.swatch}
-                            style={styles.swatchContainer}
-                        />
-                    </ColorPicker>
-                </View>
 
                 <View style={styles.albumArea}>
                     <FlatList
@@ -46,12 +32,28 @@ export default function ColorAlbumScreen({ navigation }) {
                         columnWrapperStyle={{
                             columnGap: 15,
                         }}
+                        ListHeaderComponent={() =>
+                            <View style={styles.colorTypeArea}>
+                                <ColorPicker
+                                    sliderThickness={24}
+                                    thumbSize={24}
+                                    onChange={onSelectColor}
+                                    adaptSpectrum
+                                    boundedThumb>
+                                    <Swatches
+                                        colors={customSwatches}
+                                        swatchStyle={styles.swatch}
+                                        style={styles.swatchContainer}
+                                    />
+                                </ColorPicker>
+                            </View>
+                        }
 
+                        ListFooterComponent={() => <View style={{ height: 150 }} />}
                     />
                 </View>
-                <View style={{ height: 75 }} />
+                        <AddButton />
             </LinearGradient>
-            <AddButton />
         </View>
     );
 }
