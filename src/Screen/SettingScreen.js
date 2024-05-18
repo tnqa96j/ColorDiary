@@ -9,7 +9,7 @@ import AddButton from "../component/AddButton";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function SettingScreen() {
+export default function SettingScreen({navigation}) {
 
     const [fontsLoaded, fontError] = useFonts({
         'KoHo-Light': require('../../assets/font/KoHo-Light.ttf'),
@@ -65,7 +65,7 @@ export default function SettingScreen() {
                     </LinearGradient>
                 </View>
             </ScrollView>
-            <AddButton />
+            <AddButton navigation={navigation} />
         </View>
     );
 }

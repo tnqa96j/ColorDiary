@@ -1,18 +1,18 @@
-import { View, Text, StyleSheet, Pressable, ScrollView, FlatList } from "react-native";
+import { View, Text, StyleSheet, Pressable, ScrollView, FlatList, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
-import React, { useCallback, useState } from 'react';
-import Calendar from "../component/Calender";
+import React, { useCallback, useState, useEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper } from '@gluestack-ui/themed';
-import articleData from '../json/article.json'
 import ArticleItem from "../component/ArticleItem";
 import AddButton from "../component/AddButton";
-
+import CalendarStrip from 'react-native-calendar-strip';
+import { useGetDiary, useGetColorTags, useGetCustomTags } from "../../react-query";
+import moment from "moment";
 SplashScreen.preventAutoHideAsync();
 
-export default function DiaryScreen() {
+export default function DiaryScreen({ navigation }) {
 
     const [showActionsheet, setShowActionsheet] = React.useState(false)
     const handleClose = () => setShowActionsheet(!showActionsheet)
@@ -30,64 +30,153 @@ export default function DiaryScreen() {
     if (!fontsLoaded && !fontError) {
         return null;
     }
-    //按tag好像也可以儲存到全域狀態變數
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [tagsColor, setTagsColor] = useState("#F7F5EC");
-    const [tagTextColor, setTagTextColor] = useState("#3A6655");
-    const [isTagPressrd, setIsTagPressed] = useState(false)
 
-    //要怎麼讓按紐有各自的狀態?
-    const toggleTagColor = () => {
-        setIsTagPressed(isTagPressrd => !isTagPressrd);
-        if (isTagPressrd) {
-            setTagsColor("#F69463");
-            setTagTextColor("#F7F5EC")
+    //取得全部日記
+    const { data, isPending } = useGetDiary();
+    const [diaryData,setDiaryData]= useState(data);
+
+    //取得tags
+    const getColorTags = useGetColorTags();
+    const getCustomTags = useGetCustomTags();
+
+    //篩選
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [chosenTags, setChosenTags] = useState([]);
+
+    const tagStyle = (tag) => {
+        return chosenTags.includes(tag) ? [styles.tag, styles.selectedTag] : styles.tag;
+    };
+
+    const tagTextStyle = (tag) => {
+        return chosenTags.includes(tag) ? [styles.tagText, styles.selectedTagText] : styles.tagText;
+    };
+
+    const toggleAddTag = (tag) => {
+        if (chosenTags.includes(tag)) //tag已在chosenTags中的話，則刪除
+        {
+            const updatedTags = chosenTags.filter((chosenTag) => chosenTag !== tag);
+            setChosenTags(updatedTags);
         }
-        else {
-            setTagsColor("#F7F5EC");
-            setTagTextColor("#3A6655");
+        else { //tag不在chosentags中的話，則添加它
+            setChosenTags([...chosenTags, tag]);
         }
     }
 
-    
+    useEffect(() => {
+        if(chosenTags.length > 0){
+            const filteredData = filterDiaryByTag(chosenTags,data);
+            setDiaryData(filteredData);
+        }
+        else{
+            setDiaryData(data);
+        }
+    }, [chosenTags,data]);
+
+    const filterDiaryByTag = (selectedTags, data) => {
+        return data.filter(diary => {
+            return diary.tags.some(tag => selectedTags.includes(tag));
+        });
+    };
+
+    useEffect(()=>{
+        if(!selectedDate){
+            setDiaryData(data);
+        }
+        else{
+            const filteredTimeData = filterDiaryByDate(selectedDate,data);
+            setDiaryData(filteredTimeData);
+        }
+    },[selectedDate]);
+
+    const filterDiaryByDate = (selectedDate,data) =>{
+        const selectedTimestamp = new Date(selectedDate).getTime();
+        const filteredData = data.filter(diary => {
+            return new Date(diary.time).toDateString() === new Date(selectedTimestamp).toDateString();
+        })
+
+        return filteredData;
+    }
+
+    const markedDatesFunc = (date) => {
+        const today = moment(); // 獲取當前日期的 Moment 對象
+        // 檢查日期是否與今天相同
+        if (date.isSame(today, 'day')) {
+            return {
+                lines: [
+                    {
+                      color:"#F69261" ,
+                      selectedColor:"transparent",
+                    },
+                ],
+            };
+        }
+        return {}; // 如果不是今天的日期，返回空對象
+    }
+    const handleDateSelected = date => {
+        setSelectedDate(date);
+        console.log(date);
+    }
+
     ListHeaderComponent = () => {
         return (
             <>
-                <Calendar
-                    onSelectDate={setSelectedDate}
-                    selected={selectedDate}
-                />
+            <CalendarStrip 
+                scrollerPaging={true}
+                onDateSelected={handleDateSelected}
+                style={{
+                    height:100,
+                }}
+                calendarHeaderContainerStyle={{
+                    marginBottom:20
+                }}
+                calendarHeaderStyle={{
+                    color:'#3A6655',
+                    fontWeight:100
+                }}
+                dateNumberStyle={{
+                    fontWeight: 100,
+                    color:'#3A6655'
+                }}
+                dateNameStyle={{
+                    fontWeight: 100,
+                    color:'#3A6655',
+                }}
+                highlightDateNameStyle={{
+                    color:'#faf6ec',
+                    marginTop:5
+                }}
+                highlightDateNumberStyle={{
+                    color:'#faf6ec',
+                }}
+                highlightDateContainerStyle={{
+                   backgroundColor:'#F69261',
+                   borderRadius:10,
+                }}
+                markedDates={markedDatesFunc}
+                calendarAnimation={{type:'sequence',duration:250,useNativeDriver:false}}
+                daySelectionAnimation={{type:'background',duration:100,highlightColor:'#F69261'}}
 
+            />
                 <View style={styles.tagArea}>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         style={styles.tagScroll}
                     >
-                        <Pressable style={styles.tags}>
-                            <LinearGradient
-                                colors={['#F69261', '#FFBA8F']}
-                                style={{ ...styles.lineargradient, borderRadius: 12 }}
-                            />
-                            <Text style={styles.tagText}>踏青</Text>
-                            <AntDesign name="close" size={24} style={styles.tagText} color="black" />
-                        </Pressable>
-                        <Pressable style={styles.tags}>
-                            <LinearGradient
-                                colors={['#F69261', '#FFBA8F']}
-                                style={{ ...styles.lineargradient, borderRadius: 12 }}
-                            />
-                            <Text style={styles.tagText}>綠色系</Text>
-                            <AntDesign name="close" size={24} style={styles.tagText} color="black" />
-                        </Pressable>
-                        <Pressable style={styles.tags}>
-                            <LinearGradient
-                                colors={['#F69261', '#FFBA8F']}
-                                style={{ ...styles.lineargradient, borderRadius: 12 }}
-                            />
-                            <Text style={styles.tagText}>紅色系</Text>
-                            <AntDesign name="close" size={24} style={styles.tagText} color="black" />
-                        </Pressable>
+                        {
+                            chosenTags.map((tag, index) => (
+                                <View
+                                    key={index}
+                                    style={styles.tags}>
+                                    <LinearGradient
+                                        colors={['#F69261', '#FFBA8F']}
+                                        style={{ ...styles.lineargradient, borderRadius: 100 }}
+                                    />
+                                    <Text style={styles.shownTag}>{tag}</Text>
+                                </View>
+                            ))
+                        }
+
                     </ScrollView>
 
                     <Pressable style={{ ...styles.tags, borderColor: '#F69463', borderWidth: 0.5, backgroundColor: "#F7F5EC" }}
@@ -106,20 +195,31 @@ export default function DiaryScreen() {
                 colors={['#faf6ec', '#d7e5e1']}
                 style={styles.lineargradient}
             >
+                {
+                    isPending
+                        ? (
+                            <View style={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
+                                <ActivityIndicator size={100} color="#456F5F" />
+                            </View>
+                        )
+                        : (
+                            <View style={styles.articleArea}>
+                                <FlatList
+                                    data={diaryData}
+                                    renderItem={({ item }) => <ArticleItem data={item} navigation={navigation} />}
+                                    keyExtractor={item => item.id}
+                                    showsVerticalScrollIndicator={false}
+                                    ListHeaderComponent={this.ListHeaderComponent()}
+                                    ListFooterComponent={() => <View style={{ height: 100 }} />}
+                                />
+                            </View>
+                        )
+                }
 
-                <View style={styles.articleArea}>
-                    <FlatList
-                        data={articleData}
-                        renderItem={({ item }) => <ArticleItem data={item} />}
-                        keyExtractor={item => item.id}
-                        showsVerticalScrollIndicator={false}
-                        ListHeaderComponent={this.ListHeaderComponent()}
-                        ListFooterComponent={() => <View style={{ height: 100 }} />}
-                    />
-                </View>
-            </LinearGradient>
 
-            <AddButton />
+            </LinearGradient >
+
+            <AddButton navigation={navigation} />
 
             <Actionsheet isOpen={showActionsheet} onClose={handleClose} zIndex={999}>
                 <ActionsheetBackdrop />
@@ -134,51 +234,50 @@ export default function DiaryScreen() {
                     >
                         <Text style={styles.title}>篩選標籤</Text>
                         <Text style={styles.subTitle}>色系</Text>
-                        <View style={{ ...styles.tagArea2 }}>
-                            <Pressable style={{ ...styles.tags2, backgroundColor: tagsColor }} onPress={toggleTagColor}>
-                                <Text style={{ ...styles.tagText, color: tagTextColor, marginLeft: 10 }}>紅色系</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>深綠色系</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>黃色系</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>暖橘</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>淺藍色</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>淡紫</Text>
-                            </Pressable>
+                        <View style={styles.tagArea2}>
+                            {
+                                getColorTags.isLoading
+                                    ? (
+                                        <ActivityIndicator />
+                                    )
+                                    : (
+                                        getColorTags.data.map((tag, index) =>
+                                            <Pressable
+                                                style={tagStyle(tag)}
+                                                key={index}
+                                                onPress={() => toggleAddTag(tag)}>
+                                                <Text style={tagTextStyle(tag)}>{tag}</Text>
+                                            </Pressable>
+                                        )
+                                    )
+
+                            }
                         </View>
                         <Text style={styles.subTitle}>自訂</Text>
-                        <View style={{ ...styles.tagArea2 }}>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>運動</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>美食</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>出去玩</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>娛樂</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>心情紀錄</Text>
-                            </Pressable>
-                            <Pressable style={styles.tags2}>
-                                <Text style={{ ...styles.tagText, color: "#3A6655", marginLeft: 10 }}>日常生活</Text>
-                            </Pressable>
+                        <View style={styles.tagArea2}>
+                            {
+                                getCustomTags.isLoading
+                                    ? (
+                                        <ActivityIndicator />
+                                    )
+                                    : (
+                                        getCustomTags.data.map((tag, index) =>
+                                            <Pressable
+                                                style={tagStyle(tag)}
+                                                key={index}
+                                                onPress={() => toggleAddTag(tag)}>
+                                                <Text style={tagTextStyle(tag)}>{tag}</Text>
+                                            </Pressable>
+                                        )
+                                    )
+
+                            }
                         </View>
+
                     </ScrollView>
                 </ActionsheetContent>
             </Actionsheet>
-        </View>
+        </View >
     );
 }
 
@@ -211,10 +310,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         margin: 5
     },
-    tagText: {
+    shownTag: {
         marginVertical: 5,
-        marginHorizontal: 10,
-        marginLeft: 20,
+        marginHorizontal: 20,
         fontSize: 14,
         color: '#F7F5EC',
     },
@@ -257,6 +355,34 @@ const styles = StyleSheet.create({
         paddingHorizontal: '5%',
         paddingVertical: 5,
         flex: 1
-    }
+    },
+    tag: {
+        borderRadius: 100,
+        borderWidth: 0.5,
+        borderColor: '#F69261',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 5,
+        backgroundColor: "#faf6ec",
+        paddingHorizontal: 20,
+        paddingVertical: 10
+    },
+    selectedTag: {
+        borderRadius: 100,
+        borderWidth: 0.5,
+        borderColor: '#F69261',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 3,
+        backgroundColor: "#F69261"
+    },
+    tagText: {
+        color: '#456F5F',
+    },
+    selectedTagText: {
+        color: '#faf6ec',
+    },
 });
 

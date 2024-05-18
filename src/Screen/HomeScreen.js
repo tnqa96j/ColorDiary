@@ -7,11 +7,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import ColorRing from "../component/ColorRing";
 import AddButton from "../component/AddButton";
-
+import WeekCalendar from "../component/WeekCalendar";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
 
     const colors = useSelector(selectPickedColors);
 
@@ -68,10 +68,11 @@ export default function HomeScreen() {
                             <Text style={styles.three}>GO</Text>
                         </View>
                     </View>
+
                     <View style={{height:80}} />
                 </ScrollView>
             </LinearGradient>
-            <AddButton />
+            <AddButton navigation={navigation} />
         </View>
 
     );

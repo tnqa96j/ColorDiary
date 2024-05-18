@@ -52,7 +52,7 @@ export default function ColorAlbumScreen({ navigation }) {
                         ListFooterComponent={() => <View style={{ height: 150 }} />}
                     />
                 </View>
-                        <AddButton />
+                        <AddButton navigation={navigation}/>
             </LinearGradient>
         </View>
     );

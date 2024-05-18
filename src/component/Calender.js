@@ -17,8 +17,9 @@ export default function Calendar({ onSelectDate, selected }) {
 
     const getDates = () => {
         const _dates = [];
-        for (let i = 0; i < 90; i++) {
-            const date = moment().add(i, 'days');
+        const startDate = moment('2024-04-01')
+        for (let i = 0; i < 120; i++) {
+            const date = startDate.clone().add(i, 'days');
             _dates.push(date);
         }
         setDates(_dates);
