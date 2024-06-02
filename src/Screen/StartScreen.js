@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet, Image,SafeAreaView,StatusBar } from "react-native";
+import { View, Text, Pressable, StyleSheet, Image, SafeAreaView, StatusBar } from "react-native";
 import { useDispatch } from "react-redux";
 import { setPickedColor1, setPickedColor2, setPickedColor3, setPickedColor4, setPickedColor5, setHasPickedColor } from '../redux/pickColorSlice';
 import { LinearGradient } from "expo-linear-gradient";
@@ -44,19 +44,19 @@ export default function StartScreen({ navigation }) {
     }
 
     const [fontsLoaded, fontError] = useFonts({
-        'KoHo-Light' : require('../../assets/font/KoHo-Light.ttf'),
+        'KoHo-Light': require('../../assets/font/KoHo-Light.ttf'),
         'Caveat-Medium': require('../../assets/font/Caveat-Medium.ttf')
-      });
-    
-      const onLayoutRootView = useCallback(async () => {
+    });
+
+    const onLayoutRootView = useCallback(async () => {
         if (fontsLoaded || fontError) {
-          await SplashScreen.hideAsync();
+            await SplashScreen.hideAsync();
         }
-      }, [fontsLoaded, fontError]);
-    
-      if (!fontsLoaded && !fontError) {
+    }, [fontsLoaded, fontError]);
+
+    if (!fontsLoaded && !fontError) {
         return null;
-      }
+    }
 
 
     return (
@@ -66,36 +66,41 @@ export default function StartScreen({ navigation }) {
                 colors={['#faf6ec', '#d7e5e1']}
                 style={styles.lineargradient}>
 
-                <View style={styles.logo}>
-                    <Text style={styles.logoText}>COLORFUL DIARY</Text>
-                </View>
+                <View style={{
+                    display: 'flex',
+                    padding: '10%',
+                    justifyContent: 'space-evenly',
+                    flex: 1
+                }}>
+                    <Text style={styles.hello}> 你好，Yan</Text>
 
-                <View >
-                    <Image style={styles.image} source={require('../../assets/shine-painting-tools-and-brushes.png')} />
-                </View>
+                    <View >
+                        <Image style={styles.image} source={require('../../assets/shine-painting-tools-and-brushes.png')} />
+                    </View>
 
-                <View style={styles.titleArea}>
-                    <Text allowFontScaling={true} style={styles.subTitle}>開始挑選</Text>
-                    <Text allowFontScaling={true} style={styles.mainTitle}>今天的五個顏色！</Text>
-                </View>
+                    <View style={styles.titleArea}>
+                        <Text allowFontScaling={true} style={styles.subTitle}>開始挑選</Text>
+                        <Text allowFontScaling={true} style={styles.mainTitle}>今天的五個顏色！</Text>
+                    </View>
 
-                <View style={styles.buttonArea}>
-                    <Pressable
-                        style={{ ...styles.button, backgroundColor: '#F7F5EC', borderColor: '#F69463', borderWidth: 1 }}
-                        onPress={handlePress}>
-                        <Text style={{ ...styles.buttonText, color: '#3A6655' }}>隨機產生</Text>
-                    </Pressable>
+                    <View style={styles.buttonArea}>
+                        <Pressable
+                            style={{ ...styles.button, backgroundColor: '#F7F5EC', borderColor: '#F69463', borderWidth: 1 }}
+                            onPress={handlePress}>
+                            <Text style={{ ...styles.buttonText, color: '#3A6655' }}>隨機產生</Text>
+                        </Pressable>
 
-                    <Pressable 
-                        style={styles.button}
-                        onPress={() => navigation.navigate('pickColor')}>
-                        <LinearGradient 
-                            style={{...styles.lineargradient,borderRadius:100,flex:0.4,justifyContent:'center'}}
-                            colors={['#F69261','#F8AC79']}>
-                            <Text style={styles.buttonText}>手動選擇</Text>
-                        </LinearGradient>
-                    </Pressable>
+                        <Pressable
+                            style={styles.button}
+                            onPress={() => navigation.navigate('pickColor')}>
+                            <LinearGradient
+                                style={{ ...styles.lineargradient, borderRadius: 100, flex: 0.4, justifyContent: 'center' }}
+                                colors={['#F69261', '#F8AC79']}>
+                                <Text style={styles.buttonText}>手動選擇</Text>
+                            </LinearGradient>
+                        </Pressable>
 
+                    </View>
                 </View>
 
 
@@ -110,44 +115,33 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     logo: {
-        marginTop:'20%'
+        marginTop: '20%'
     },
-    logoText: {
-        fontSize: 40,
-        textAlign: 'center',
-        color:'#3A6655',
-        textShadowColor:"#808080",
-        textShadowOffset:{ width: 0, height: 2 },
-        textShadowRadius:10,
-        elevation:10,
-        fontFamily:'Caveat-Medium',
+    hello:{
+        fontSize:32,
+        color: "#3A6655"
     },
     image: {
-        alignSelf:'center',
-    },
-    titleArea: {
-        width: '80%',
         alignSelf: 'center',
-
     },
     mainTitle: {
         fontSize: 32,
-        color:"#3A6655"
+        color: "#3A6655"
     },
     subTitle: {
         fontSize: 28,
-        color:'#3A6655'
+        color: '#3A6655'
     },
     buttonArea: {
-        height:'8%',
-        display:'flex',
+        height: '8%',
+        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
         marginTop: 30,
         gap: 15
     },
     button: {
-        width: '40%',
+        width: '50%',
         height: '100%',
         backgroundColor: 'purple',
         borderRadius: 100,
@@ -156,8 +150,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 4,
         elevation: 4, // for Android
-        flex:0.4,
-        justifyContent:'center'
+        flex: 0.4,
+        justifyContent: 'center'
     },
     buttonText: {
         color: "white",

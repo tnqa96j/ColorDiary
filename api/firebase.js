@@ -119,3 +119,26 @@ export const deleteCustomTag = async({tag}) => {
     Custom:firebase.firestore.FieldValue.arrayRemove(tag)
   });
 }
+
+//色圖鑑部分
+export const getColorAlbum = async () => {
+  const albumRef = firebase.firestore().collection('Colors').orderBy('no', 'asc');
+  const querySnapshot = await albumRef.get();
+  const albumData = [];
+  querySnapshot.forEach((doc) => {
+    const { id,no,hex,kanji,hiragana,isTextDark,image,descript,isLocked } = doc.data();
+    albumData.push({
+      id: doc.id,
+      no,
+      hex,
+      kanji,
+      hiragana,
+      isTextDark,
+      image,
+      descript,
+      isLocked
+    });
+  });
+
+  return albumData;
+}

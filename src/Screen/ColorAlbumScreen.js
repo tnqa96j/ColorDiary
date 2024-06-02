@@ -1,9 +1,11 @@
-import { View, Text, StyleSheet, FlatList, ScrollView, SectionList } from "react-native";
+import { View, Text, StyleSheet, FlatList, ScrollView, SectionList, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import ColorPicker, { Swatches, colorKit } from 'reanimated-color-picker';
-import colorsData from '../json/color.json'
 import AlbumItem from "../component/AlbumItem";
 import AddButton from "../component/AddButton";
+import { useGetAlbum } from "../../react-query";
+import { Radio, RadioIndicator, CircleIcon, RadioIcon,RadioGroup,HStack } from "@gluestack-ui/themed";
+import React, { useState, useEffect } from 'react';
 
 export default function ColorAlbumScreen({ navigation }) {
 
@@ -13,47 +15,82 @@ export default function ColorAlbumScreen({ navigation }) {
         console.log(hex);
     }
 
+    //取得顏色資料
+    const { data, isPending } = useGetAlbum();
+    const [radioValue, setRadioValue] = useState();
+
     return (
         <View style={{ flex: 1, justifyContent: "center" }} >
             <LinearGradient
                 colors={['#faf6ec', '#d7e5e1']}
                 style={styles.lineargradient}
             >
-
-
-                <View style={styles.albumArea}>
-                    <FlatList
-                        data={colorsData}
-                        renderItem={({ item }) => <AlbumItem data={item} navigation={navigation} />}
-                        keyExtractor={item => item.id}
-                        showsVerticalScrollIndicator={false}
-                        numColumns={3}
-                        horizontal={false}
-                        columnWrapperStyle={{
-                            columnGap: 15,
-                        }}
-                        ListHeaderComponent={() =>
-                            <View style={styles.colorTypeArea}>
-                                <ColorPicker
-                                    sliderThickness={24}
-                                    thumbSize={24}
-                                    onChange={onSelectColor}
-                                    adaptSpectrum
-                                    boundedThumb>
-                                    <Swatches
-                                        colors={customSwatches}
-                                        swatchStyle={styles.swatch}
-                                        style={styles.swatchContainer}
-                                    />
-                                </ColorPicker>
+                {
+                    isPending
+                        ? (
+                            <View style={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
+                                <ActivityIndicator size={100} color="#456F5F" />
                             </View>
-                        }
+                        )
+                        : (
+                            <View style={styles.albumArea}>
+                                <FlatList
+                                    data={data}
+                                    renderItem={({ item }) => <AlbumItem data={item} navigation={navigation} />}
+                                    keyExtractor={item => item.id}
+                                    showsVerticalScrollIndicator={false}
+                                    numColumns={3}
+                                    horizontal={false}
+                                    columnWrapperStyle={{
+                                        columnGap: 15,
+                                    }}
+                                    ListHeaderComponent={() =>
+                                        <View style={styles.colorTypeArea}>
+                                            <RadioGroup value={radioValue} onChange={setRadioValue}>
+                                                <HStack space="2xl">
+                                                    <Radio value="red">
+                                                        <RadioIndicator mr="$2" style={{ borderColor: '#FA6969' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#FA6969' }}/>
+                                                        </RadioIndicator>
+                                                    </Radio>
+                                                    <Radio value="orange">
+                                                        <RadioIndicator mr="$2"  style={{ borderColor: '#FAC969' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#FAC969' }}/>
+                                                        </RadioIndicator>
+                                                    </Radio>
+                                                    <Radio value="yellow">
+                                                        <RadioIndicator mr="$2" style={{ borderColor: '#FAE369' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#FAE369' }}/>
+                                                        </RadioIndicator>
+                                                    </Radio>
+                                                    <Radio value="green">
+                                                        <RadioIndicator mr="$2" style={{ borderColor: '#BAFA69' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#BAFA69' }}/>
+                                                        </RadioIndicator>
+                                                    </Radio>
+                                                    <Radio value="blue">
+                                                        <RadioIndicator mr="$2" style={{ borderColor: '#69C6FA' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#69C6FA' }}/>
+                                                        </RadioIndicator>
+                                                    </Radio>
+                                                    <Radio value="purple">
+                                                        <RadioIndicator mr="$2" style={{ borderColor: '#CC69FA' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#CC69FA' }}/>
+                                                        </RadioIndicator>
+                                                    </Radio>
+                                                </HStack>
+                                            </RadioGroup>
+                                        </View>
+                                    }
 
-                        ListFooterComponent={() => <View style={{ height: 150 }} />}
-                    />
-                </View>
-                        <AddButton navigation={navigation}/>
+                                    ListFooterComponent={() => <View style={{ height: 150 }} />}
+                                />
+                            </View>
+
+                        )
+                }
             </LinearGradient>
+            <AddButton navigation={navigation} />
         </View>
     );
 }
@@ -67,7 +104,8 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     colorTypeArea: {
-
+        alignItems:'center',
+        paddingVertical:'5%'
     },
     swatchContainer: {
         paddingVertical: 40,

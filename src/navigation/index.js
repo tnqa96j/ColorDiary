@@ -9,6 +9,7 @@ import ColorAlbumScreen from "../Screen/ColorAlbumScreen";
 import SettingScreen from "../Screen/SettingScreen";
 import PickColorScreen from "../Screen/PickColorScreen";
 import StartScreen from "../Screen/StartScreen";
+import EnterScreen from '../Screen/EnterScreen';
 import ColorDetailScreen from '../Screen/ColorDetailScreen';
 import EditDiaryScreen from '../Screen/EditDiaryScreen';
 import UploadDiaryScreen from '../Screen/UploadDiaryScreen';
@@ -55,6 +56,7 @@ const FirstStack = () => {
                 headerShown: false,
 
             }}>
+            <Stack.Screen  name='enter' component={EnterScreen}/>
             <Stack.Screen name="start" component={StartScreen} />
             <Stack.Screen name="pickColor" component={PickColorScreen} />
         </Stack.Navigator>

@@ -9,6 +9,7 @@ const initialState = {
         color5:"#DCE2E3",
     },
     hasPickedColor : false,
+    
 };
 
 const pickColorSlice = createSlice({

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getDiary, addDiary,deleteDiary,editDiary } from "../api/firebase";
 import { addTag,getColorTags,getCustomTags,deleteColorTag,deleteCustomTag } from "../api/firebase";
+import { getColorAlbum } from "../api/firebase";
 import { useDispatch } from "react-redux";
 import { setIsPending } from "../src/redux/uploadDiarySlice";
 
@@ -107,4 +108,12 @@ export const useDeleteCustomTag = () =>{
     });
 
     return mutation;
+}
+
+export const useGetAlbum = () => {
+    const query = useQuery({
+        queryKey:['Colors'],
+        queryFn:getColorAlbum,
+    })
+    return query;
 }
