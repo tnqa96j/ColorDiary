@@ -108,7 +108,7 @@ export default function AddButton({ navigation }) {
 
             {
                 image && <Modal
-                    animationType="slide"
+                    animationType="fade"
                     transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => {
@@ -192,7 +192,8 @@ const styles = StyleSheet.create({
     title: {
         textAlign: 'center',
         fontSize: 24,
-        marginVertical: '1%'
+        marginVertical: '1%',
+        color:'#3A6655'
     },
     uploadBlock: {
         width: '100%',

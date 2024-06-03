@@ -3,7 +3,7 @@ import { View, Text,SafeAreaView,StatusBar } from "react-native";
 import { StyleSheet, Pressable } from 'react-native';
 import { useDispatch, useSelector } from "react-redux";
 import { setPickedColor1, setPickedColor2, setPickedColor3, setPickedColor4, setPickedColor5, setHasPickedColor } from '../redux/pickColorSlice';
-import { selectPickedColors } from '../redux/pickColorSlice';
+import { selectPickedColor1,selectPickedColor2,selectPickedColor3,selectPickedColor4,selectPickedColor5 } from '../redux/pickColorSlice';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper } from '@gluestack-ui/themed';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
@@ -19,17 +19,21 @@ SplashScreen.preventAutoHideAsync();
 
 export default function PickColorScreen() {
 
-    const colors = useSelector(selectPickedColors);
+    const reduxColor1 = useSelector(selectPickedColor1);
+    const reduxColor2 = useSelector(selectPickedColor2);
+    const reduxColor3 = useSelector(selectPickedColor3);
+    const reduxColor4 = useSelector(selectPickedColor4);
+    const reduxColor5 = useSelector(selectPickedColor5);
 
 
     const [showActionsheet, setShowActionsheet] = React.useState(false)
     const handleClose = () => setShowActionsheet(!showActionsheet)
 
-    const [color1, setColor1] = useState(colors ? colors.color1 : "#000000");
-    const [color2, setColor2] = useState(colors ? colors.color2 : "#000000");
-    const [color3, setColor3] = useState(colors ? colors.color3 : "#000000");
-    const [color4, setColor4] = useState(colors ? colors.color4 : "#000000");
-    const [color5, setColor5] = useState(colors ? colors.color5 : "#000000");
+    const [color1, setColor1] = useState(reduxColor1 ? reduxColor1 : '#DCE2E3');
+    const [color2, setColor2] = useState(reduxColor2 ? reduxColor2 : '#DCE2E3');
+    const [color3, setColor3] = useState(reduxColor3 ? reduxColor3 : '#DCE2E3');
+    const [color4, setColor4] = useState(reduxColor4 ? reduxColor4 : '#DCE2E3');
+    const [color5, setColor5] = useState(reduxColor5 ? reduxColor5 : '#DCE2E3');
 
     const [buttonIndex, setButtonIndex] = useState();
 
@@ -144,7 +148,7 @@ export default function PickColorScreen() {
                         onPress={() => { handleClose(); passIndex(4); }}
                         style={{ ...styles.pressable, backgroundColor: color4, height: '90%' }} >
                             <View style={{...styles.pressableTextBox,bottom:'4%'}}>
-                                <Text style={{...styles.pressableText,color:darkenColor(color4)}} >{color1}</Text>
+                                <Text style={{...styles.pressableText,color:darkenColor(color4)}} >{color4}</Text>
                             </View>           
                     </Pressable>
                     <Pressable

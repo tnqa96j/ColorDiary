@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setDiaryTitle, setDiaryContent, setDiaryColors, setDiaryTags } from "../redux/uploadDiarySlice";
 import { selectTitle, selectContent, selectTags } from "../redux/uploadDiarySlice";
 
+import { selectUser } from "../redux/pickColorSlice";
 import { useGetColorTags, useGetCustomTags, useDeleteColorTag, useDeleteCustomTag, useAddTag } from "../../react-query";
 
 export default function EditDiaryScreen({ route }) {
@@ -43,6 +44,8 @@ export default function EditDiaryScreen({ route }) {
     const [content, setContent] = useState(diaryContent);
 
     const dispatch = useDispatch();
+
+    const user = useSelector(selectUser);
 
     const analyzeImage = async () => {
         try {

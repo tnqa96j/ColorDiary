@@ -10,6 +10,8 @@ import AddButton from "../component/AddButton";
 import CalendarStrip from 'react-native-calendar-strip';
 import { useGetDiary, useGetColorTags, useGetCustomTags } from "../../react-query";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/pickColorSlice";
 SplashScreen.preventAutoHideAsync();
 
 export default function DiaryScreen({ navigation }) {
@@ -31,8 +33,11 @@ export default function DiaryScreen({ navigation }) {
         return null;
     }
 
+    //使用者
+    const user = useSelector(selectUser);
+
     //取得全部日記
-    const { data, isPending } = useGetDiary();
+    const { data, isPending } = useGetDiary(user);
     const [diaryData,setDiaryData]= useState(data);
 
     //取得tags

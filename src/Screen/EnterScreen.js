@@ -2,17 +2,19 @@ import { View, Text, Pressable, StyleSheet, Image, SafeAreaView, StatusBar, Text
 import { useDispatch } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from '@expo/vector-icons/AntDesign';
-
+import { setUser } from "../redux/pickColorSlice";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useState } from 'react';
+import { useCallback, useState,useEffect } from 'react';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function EnterScreen({ navigation }) {
 
-    const [userName, setUserName] = useState();
+    const dispatch = useDispatch();
+
+    const [userName, setUserName] = useState("");
     const handlePress = () => {
         // 如果userName為空，則不執行導航操作
         if (!userName.trim()) {
@@ -20,6 +22,7 @@ export default function EnterScreen({ navigation }) {
             return;
         } else {
             // 否則執行導航到下一頁的操作
+            dispatch(setUser(userName));
             navigation.navigate('start');
         }
 
@@ -41,6 +44,9 @@ export default function EnterScreen({ navigation }) {
         return null;
     }
 
+    /*useEffect(() => {
+        dispatch(setUser(userName));
+      }, [userName]);*/
 
 
     return (
@@ -65,7 +71,7 @@ export default function EnterScreen({ navigation }) {
                             <Text style={styles.logoText}>COLORFUL</Text>
                             <Text style={{
                                 ...styles.logoText,
-                                fontSize: 40,
+                                fontSize: 30,
                                 letterSpacing: 15
                             }}>DIARY</Text>
                         </View>
@@ -108,7 +114,7 @@ const styles = StyleSheet.create({
     },
     logoText: {
         alignSelf: 'center',
-        fontSize: 60,
+        fontSize: 40,
         color: '#3A6655',
         fontFamily: 'AbrilFatface-Regular',
         letterSpacing: 2.5
@@ -126,7 +132,7 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     inputField: {
-        fontSize: 28,
+        fontSize: 22,
         textAlign: 'center',
         color: '#3A6655'
     },

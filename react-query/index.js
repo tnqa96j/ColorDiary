@@ -5,10 +5,10 @@ import { getColorAlbum } from "../api/firebase";
 import { useDispatch } from "react-redux";
 import { setIsPending } from "../src/redux/uploadDiarySlice";
 
-export const useGetDiary = () => {
+export const useGetDiary = (user) => {
     const query = useQuery({
-        queryKey:['Diary'],
-        queryFn:getDiary,
+        queryKey:['Diary',user],
+        queryFn:()=>getDiary(user),
     })
     return query;
 }

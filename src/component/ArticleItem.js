@@ -7,6 +7,8 @@ import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper, ActionsheetItem, ActionsheetItemText, ActionsheetIcon } from "@gluestack-ui/themed";
 import { deleteDiary } from "../../api/firebase";
 import { useDeleteDiary } from "../../react-query";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/pickColorSlice";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,6 +51,7 @@ export default function ArticleItem({ data,navigation }) {
         return `${formattedDate}      ${formattedTime}`
     }
 
+    const user = useSelector(selectUser);
     const deleteDiary = useDeleteDiary();
 
     return (
@@ -125,7 +128,7 @@ export default function ArticleItem({ data,navigation }) {
                                 <TouchableOpacity style={styles.btn} onPress={() => setModalVisible(!modalVisible)}>
                                     <Text style={{fontSize:18,color:'#456F5F'}}>取消</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.btn} onPress={() => {deleteDiary.mutate(data); setModalVisible(!modalVisible)}}>
+                                <TouchableOpacity style={styles.btn} onPress={() => {deleteDiary.mutate({user,data}); setModalVisible(!modalVisible)}}>
                                     <Text style={{fontSize:18,color:'#456F5F'}}>刪除</Text>
                                 </TouchableOpacity>
                             </View>

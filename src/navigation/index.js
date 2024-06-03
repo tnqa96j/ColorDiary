@@ -22,7 +22,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectHasPickedColor } from "../redux/pickColorSlice";
 import { setDiaryTitle, setDiaryContent, setDiaryColors, setDiaryImageUri, setDiaryTags, setIsPending } from "../redux/uploadDiarySlice";
 import { selectTitle, selectContent, selectColors, selectImageUri, selectTags, selectIsPending } from "../redux/uploadDiarySlice";
+import { selectUser } from "../redux/pickColorSlice";
+import { setDailyTask, setNewColors, setUnlockedColors } from '../redux/taskSlice';
+import { Alert } from 'react-native';
 
+import colorData from '../json/color.json';
 
 import * as FileSystem from 'expo-file-system';
 
@@ -56,7 +60,7 @@ const FirstStack = () => {
                 headerShown: false,
 
             }}>
-            <Stack.Screen  name='enter' component={EnterScreen}/>
+            <Stack.Screen name='enter' component={EnterScreen} />
             <Stack.Screen name="start" component={StartScreen} />
             <Stack.Screen name="pickColor" component={PickColorScreen} />
         </Stack.Navigator>
@@ -123,13 +127,65 @@ const CompleteButton = () => {
     const diaryColors = useSelector(selectColors);
     const diaryTags = useSelector(selectTags);
     const diaryImageUri = useSelector(selectImageUri);
+    const user = useSelector(selectUser);
     const dispatch = useDispatch();
 
     const addDiary = useAddDiary();
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    const isPending = useSelector(selectIsPending)
+    const isPending = useSelector(selectIsPending);
+
+    const hexToRgb = (hex) =>{
+        // 刪除十六進制顏色碼中的井號符號 (#)
+        hex = hex.replace(/^#/, '');
+    
+        // 如果十六進制顏色碼是縮寫形式（例如 #RGB），將其擴展為完整的形式（例如 #RRGGBB）
+        if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+    
+        // 將十六進制顏色碼拆分成紅、綠、藍三個部分
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+    
+        return [r, g, b];
+    }
+
+    const  colorDistance = (color1, color2) => {
+        const r1 = color1[0];
+        const g1 = color1[1];
+        const b1 = color1[2];
+    
+        const r2 = color2[0];
+        const g2 = color2[1];
+        const b2 = color2[2];
+    
+        // 計算歐氏距離
+        const distance = Math.sqrt(Math.pow(r2 - r1, 2) + Math.pow(g2 - g1, 2) + Math.pow(b2 - b1, 2));
+    
+        return distance;
+    }
+
+    const compareColors = () =>{
+        diaryColors.forEach(diaryColor => {
+            colorData.forEach(color => {
+                if (diaryColor && color) {
+                    const a = hexToRgb(diaryColor);
+                    const b = hexToRgb(color.hex);
+                    console.log("顏色" +a +b);
+                    console.log(colorDistance(a,b));
+                    if(colorDistance(a,b)<20){
+                        dispatch(setUnlockedColors(color.hex));
+                        Alert.alert('成功解鎖和色圖鑑！',color.hex+'已解鎖');
+                    }
+                } else {
+                    console.error('diaryColor 或 color 是未定義的');
+                }
+            })
+        });
+    }
 
     const uploadImage = async () => {
         try {
@@ -158,14 +214,17 @@ const CompleteButton = () => {
                         console.log('Uri');
                         console.log(uri);
                         const timestamp = Date.now();
-                        addDiary.mutateAsync({ diaryTitle, diaryContent, diaryColors, diaryTags, timestamp, uri })
+                        addDiary.mutateAsync({ user, diaryTitle, diaryContent, diaryColors, diaryTags, timestamp, uri })
                             .then(() => {
+                                compareColors(); 
                                 dispatch(setDiaryTitle(''));
                                 dispatch(setDiaryContent(''));
                                 dispatch(setDiaryColors([]));
                                 dispatch(setDiaryTags([]));
                                 dispatch(setDiaryImageUri(null));
                                 Keyboard.dismiss();
+                                dispatch(setDailyTask());
+                                dispatch(setNewColors());
                             }).catch((error) => {
                                 alert(error);
                             })
@@ -192,7 +251,7 @@ const CompleteButton = () => {
                     alignItems: 'center',
                     justifyContent: 'center'
                 }}
-                onPress={() => { uploadImage(); setModalVisible(!modalVisible) }}
+                onPress={() => { uploadImage(); setModalVisible(!modalVisible);}}
             >
 
                 <Text

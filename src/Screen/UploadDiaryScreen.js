@@ -1,7 +1,9 @@
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, KeyboardAvoidingView, Platform, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, TextInput, KeyboardAvoidingView, Platform, Pressable,ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState, useEffect } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/pickColorSlice";
 
 import { Divider, RadioGroup, HStack, Radio, RadioIndicator, RadioIcon, RadioLabel, CircleIcon } from "@gluestack-ui/themed";
 import { useEditDiary, useGetColorTags, useGetCustomTags, useDeleteColorTag, useDeleteCustomTag, useAddTag } from "../../react-query";
@@ -28,6 +30,7 @@ export default function UploadDiaryScreen({ route, navigation }) {
     const [inputTag, setInputTag] = useState(""); // 存儲正在輸入的標籤文字
     const [chosenTags, setChosenTags] = useState(data.tags);
     const [radioValue, setRadioValue] = useState("Color");
+    const user = useSelector(selectUser);
 
     const addTag = () => {
         if (inputTag.trim() !== "") { // 確保輸入的標籤不是空的
@@ -217,7 +220,7 @@ export default function UploadDiaryScreen({ route, navigation }) {
                                 </View>
 
                                 <View style={{ height: 30 }}></View>
-                        <Pressable style={styles.completeBtn} onPress={() => { editDiary.mutate({ id: data.id, title: title, content: content, tags: chosenTags }); navigation.goBack(); }}>
+                        <Pressable style={styles.completeBtn} onPress={() => { editDiary.mutate({ user:user, id: data.id, title: title, content: content, tags: chosenTags }); navigation.goBack(); }}>
                             <LinearGradient
                                 colors={['#F69261', '#F8AC79']}
                                 style={{ ...styles.lineargradient, borderRadius: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

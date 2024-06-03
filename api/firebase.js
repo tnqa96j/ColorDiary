@@ -1,6 +1,8 @@
 import firebase from "firebase/compat/app";
 import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
+import { useSelector } from "react-redux";
+import { selectUser } from "../src/redux/pickColorSlice";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -19,8 +21,8 @@ export { firebase };
 
 //Diary部分
 //C
-export const addDiary = async ({diaryTitle,diaryContent,diaryColors,diaryTags,timestamp,uri}) => {
-  const diaryRef = firebase.firestore().collection('Diary');
+export const addDiary = async ({user,diaryTitle,diaryContent,diaryColors,diaryTags,timestamp,uri}) => {
+  const diaryRef = firebase.firestore().collection('Users').doc(user).collection('Diary');
   const createAt = firebase.firestore.FieldValue.serverTimestamp();
   diaryRef.add({
     title: diaryTitle,
@@ -34,8 +36,8 @@ export const addDiary = async ({diaryTitle,diaryContent,diaryColors,diaryTags,ti
 
 }
 //R
-export const getDiary = async () => {
-  const diaryRef = firebase.firestore().collection('Diary').orderBy('createAt', 'desc');
+export const getDiary = async (user) => {
+  const diaryRef = firebase.firestore().collection('Users').doc(user).collection('Diary').orderBy('createAt', 'desc');
   const querySnapshot = await diaryRef.get();
   const diaryData = [];
   querySnapshot.forEach((doc) => {
@@ -55,8 +57,8 @@ export const getDiary = async () => {
 }
 
 //U
-export const editDiary = async ({id,title,content,tags}) => {
-  const diaryRef = firebase.firestore().collection('Diary');
+export const editDiary = async ({user,id,title,content,tags}) => {
+  const diaryRef = firebase.firestore().collection('Users').doc(user).collection('Diary');
   diaryRef
   .doc(id)
   .update({
@@ -67,9 +69,9 @@ export const editDiary = async ({id,title,content,tags}) => {
 
 }
 //D
-export const deleteDiary = async (diary) => {
-  const diaryRef = firebase.firestore().collection('Diary');
-  diaryRef.doc(diary.id).delete();
+export const deleteDiary = async ({user,data}) => {
+  const diaryRef = firebase.firestore().collection('Users').doc(user).collection('Diary');
+  diaryRef.doc(data.id).delete();
 }
 
 //Tags部分
@@ -126,7 +128,7 @@ export const getColorAlbum = async () => {
   const querySnapshot = await albumRef.get();
   const albumData = [];
   querySnapshot.forEach((doc) => {
-    const { id,no,hex,kanji,hiragana,isTextDark,image,descript,isLocked } = doc.data();
+    const { id,no,hex,kanji,hiragana,isTextDark,image,descript,isLocked,type } = doc.data();
     albumData.push({
       id: doc.id,
       no,
@@ -136,7 +138,8 @@ export const getColorAlbum = async () => {
       isTextDark,
       image,
       descript,
-      isLocked
+      isLocked,
+      type,
     });
   });
 

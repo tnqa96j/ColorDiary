@@ -1,7 +1,8 @@
 import { View, Text, Pressable, StyleSheet, Image, SafeAreaView, StatusBar } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { setPickedColor1, setPickedColor2, setPickedColor3, setPickedColor4, setPickedColor5, setHasPickedColor } from '../redux/pickColorSlice';
 import { LinearGradient } from "expo-linear-gradient";
+import { selectUser } from "../redux/pickColorSlice";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
@@ -12,6 +13,7 @@ SplashScreen.preventAutoHideAsync();
 export default function StartScreen({ navigation }) {
 
     const dispatch = useDispatch();
+    const userName = useSelector(selectUser);
 
     let color1 = "", color2 = "", color3 = "", color4 = "", color5 = "";
 
@@ -72,7 +74,7 @@ export default function StartScreen({ navigation }) {
                     justifyContent: 'space-evenly',
                     flex: 1
                 }}>
-                    <Text style={styles.hello}> 你好，Yan</Text>
+                    <Text style={styles.hello}> 你好，{userName}</Text>
 
                     <View >
                         <Image style={styles.image} source={require('../../assets/shine-painting-tools-and-brushes.png')} />
@@ -85,7 +87,7 @@ export default function StartScreen({ navigation }) {
 
                     <View style={styles.buttonArea}>
                         <Pressable
-                            style={{ ...styles.button, backgroundColor: '#F7F5EC', borderColor: '#F69463', borderWidth: 1 }}
+                            style={{ ...styles.button, backgroundColor: '#F7F5EC', borderColor: '#F69463', borderWidth: 0.5 }}
                             onPress={handlePress}>
                             <Text style={{ ...styles.buttonText, color: '#3A6655' }}>隨機產生</Text>
                         </Pressable>
@@ -94,7 +96,7 @@ export default function StartScreen({ navigation }) {
                             style={styles.button}
                             onPress={() => navigation.navigate('pickColor')}>
                             <LinearGradient
-                                style={{ ...styles.lineargradient, borderRadius: 100, flex: 0.4, justifyContent: 'center' }}
+                                style={{ ...styles.lineargradient, display:'flex',borderRadius: 100, justifyContent: 'center',alignContent:'center' }}
                                 colors={['#F69261', '#F8AC79']}>
                                 <Text style={styles.buttonText}>手動選擇</Text>
                             </LinearGradient>
@@ -143,20 +145,21 @@ const styles = StyleSheet.create({
     button: {
         width: '50%',
         height: '100%',
-        backgroundColor: 'purple',
+        padding:'5%',
         borderRadius: 100,
         shadowColor: '#F69261',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
         elevation: 4, // for Android
-        flex: 0.4,
         justifyContent: 'center'
     },
     buttonText: {
         color: "white",
         textAlign: 'center',
-        fontSize: 20,
+        textAlignVertical:'center',
+        fontSize:18,
+        lineHeight:20
     },
     lineargradient: {
         position: 'absolute',

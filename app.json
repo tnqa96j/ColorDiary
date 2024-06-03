@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mid_17_ColorfulDiary",
-    "slug": "mid_17_ColorfulDiary",
+    "name": "fin_11_ColorfulDiary",
+    "slug": "fin_11_ColorfulDiary",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,16 +29,17 @@
     "plugins": [
       "expo-font"
     ],
-    "extra": {
-      "eas": {
-        "projectId": "c8fce146-44e0-4135-8ffe-f18153f6ac51"
-      }
-    },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/c8fce146-44e0-4135-8ffe-f18153f6ac51"
-    }
+      "url": "https://u.expo.dev/065501c3-4d25-4d19-87f5-d2ea2ce7424e"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "065501c3-4d25-4d19-87f5-d2ea2ce7424e"
+      }
+    },
+    "owner": "ntuedtd2024app"
   }
 }

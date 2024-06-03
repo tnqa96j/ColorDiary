@@ -4,8 +4,9 @@ import ColorPicker, { Swatches, colorKit } from 'reanimated-color-picker';
 import AlbumItem from "../component/AlbumItem";
 import AddButton from "../component/AddButton";
 import { useGetAlbum } from "../../react-query";
-import { Radio, RadioIndicator, CircleIcon, RadioIcon,RadioGroup,HStack } from "@gluestack-ui/themed";
+import { Radio, RadioIndicator, CircleIcon, RadioIcon, RadioGroup, HStack } from "@gluestack-ui/themed";
 import React, { useState, useEffect } from 'react';
+
 
 export default function ColorAlbumScreen({ navigation }) {
 
@@ -17,7 +18,24 @@ export default function ColorAlbumScreen({ navigation }) {
 
     //取得顏色資料
     const { data, isPending } = useGetAlbum();
+
     const [radioValue, setRadioValue] = useState();
+    const [colorData, setColorData] = useState(data);
+
+
+    //篩選
+    useEffect(()=>{
+        if(radioValue){
+            console.log("radio" + " " + radioValue);
+            const filteredData = data.filter(item => item.type === radioValue);
+            setColorData(filteredData);
+        }else{
+            setColorData(data);
+        }
+    },[radioValue,data]);
+
+
+
 
     return (
         <View style={{ flex: 1, justifyContent: "center" }} >
@@ -35,7 +53,7 @@ export default function ColorAlbumScreen({ navigation }) {
                         : (
                             <View style={styles.albumArea}>
                                 <FlatList
-                                    data={data}
+                                    data={colorData}
                                     renderItem={({ item }) => <AlbumItem data={item} navigation={navigation} />}
                                     keyExtractor={item => item.id}
                                     showsVerticalScrollIndicator={false}
@@ -49,33 +67,38 @@ export default function ColorAlbumScreen({ navigation }) {
                                             <RadioGroup value={radioValue} onChange={setRadioValue}>
                                                 <HStack space="2xl">
                                                     <Radio value="red">
-                                                        <RadioIndicator mr="$2" style={{ borderColor: '#FA6969' }}>
-                                                            <RadioIcon as={CircleIcon} style={{ color: '#FA6969' }}/>
+                                                        <RadioIndicator  style={{ borderColor: '#FA6969' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#FA6969' }} />
                                                         </RadioIndicator>
                                                     </Radio>
                                                     <Radio value="orange">
-                                                        <RadioIndicator mr="$2"  style={{ borderColor: '#FAC969' }}>
-                                                            <RadioIcon as={CircleIcon} style={{ color: '#FAC969' }}/>
+                                                        <RadioIndicator style={{ borderColor: '#FAC969' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#FAC969' }} />
                                                         </RadioIndicator>
                                                     </Radio>
                                                     <Radio value="yellow">
-                                                        <RadioIndicator mr="$2" style={{ borderColor: '#FAE369' }}>
-                                                            <RadioIcon as={CircleIcon} style={{ color: '#FAE369' }}/>
+                                                        <RadioIndicator  style={{ borderColor: '#FAE369' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#FAE369' }} />
                                                         </RadioIndicator>
                                                     </Radio>
                                                     <Radio value="green">
-                                                        <RadioIndicator mr="$2" style={{ borderColor: '#BAFA69' }}>
-                                                            <RadioIcon as={CircleIcon} style={{ color: '#BAFA69' }}/>
+                                                        <RadioIndicator  style={{ borderColor: '#BAFA69' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#BAFA69' }} />
                                                         </RadioIndicator>
                                                     </Radio>
                                                     <Radio value="blue">
-                                                        <RadioIndicator mr="$2" style={{ borderColor: '#69C6FA' }}>
-                                                            <RadioIcon as={CircleIcon} style={{ color: '#69C6FA' }}/>
+                                                        <RadioIndicator  style={{ borderColor: '#69C6FA' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#69C6FA' }} />
                                                         </RadioIndicator>
                                                     </Radio>
                                                     <Radio value="purple">
-                                                        <RadioIndicator mr="$2" style={{ borderColor: '#CC69FA' }}>
-                                                            <RadioIcon as={CircleIcon} style={{ color: '#CC69FA' }}/>
+                                                        <RadioIndicator  style={{ borderColor: '#CC69FA' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: '#CC69FA' }} />
+                                                        </RadioIndicator>
+                                                    </Radio>
+                                                    <Radio value="">
+                                                        <RadioIndicator style={{ borderColor: 'gray' }}>
+                                                            <RadioIcon as={CircleIcon} style={{ color: 'gray' }} />
                                                         </RadioIndicator>
                                                     </Radio>
                                                 </HStack>
@@ -104,8 +127,8 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     colorTypeArea: {
-        alignItems:'center',
-        paddingVertical:'5%'
+        alignItems: 'center',
+        paddingVertical: '10%'
     },
     swatchContainer: {
         paddingVertical: 40,
